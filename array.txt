@@ -1,0 +1,245 @@
+1.Implement a method to find the subarray with the maximum sum (Kadane’s Algorithm) in a given integer array.
+  
+  public static int MaxSubarraySum(int[] arr)
+    {
+        int maxSoFar = int.MinValue;
+        int currentMax = 0;
+
+        for (int i = 0; i < arr.Length; i++)
+        {
+            currentMax += arr[i];
+            if (currentMax > maxSoFar)
+            {
+                maxSoFar = currentMax;
+            }
+            if (currentMax < 0)
+            {
+                currentMax = 0;
+            }
+        }
+        return maxSoFar;
+    }
+
+
+2.Write a program to find the intersection and union of two unsorted arrays without using built-in functions.
+
+    public static void IntersectionAndUnion(int[] arr1, int[] arr2)
+    {
+       
+        int[] intersection = new int[0]; // Start with an empty array
+        for (int i = 0; i < arr1.Length; i++)
+        {
+            for (int j = 0; j < arr2.Length; j++)
+            {
+                if (arr1[i] == arr2[j])
+                {
+                    bool found = false;
+                    for (int k = 0; k < intersection.Length; k++) // Check for duplicates
+                    {
+                        if (intersection[k] == arr1[i])
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) // Only add if not already in intersection
+                    {
+                        int[] temp = new int[intersection.Length + 1]; // Resize array
+                        Array.Copy(intersection, temp, intersection.Length);
+                        temp[intersection.Length] = arr1[i];
+                        intersection = temp;
+                    }
+                    break; // Optimization: No need to check other elements in arr2 once found
+                }
+            }
+        }
+
+
+        int[] union = new int[0];
+        // Add all elements from arr1 (avoiding duplicates)
+        for (int i = 0; i < arr1.Length; i++)
+        {
+            bool found = false;
+            for (int k = 0; k < union.Length; k++)
+            {
+                if (union[k] == arr1[i])
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                int[] temp = new int[union.Length + 1];
+                Array.Copy(union, temp, union.Length);
+                temp[union.Length] = arr1[i];
+                union = temp;
+            }
+        }
+
+        for (int i = 0; i < arr2.Length; i++)
+        {
+            bool found = false;
+            for (int k = 0; k < union.Length; k++)
+            {
+                if (union[k] == arr2[i])
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                int[] temp = new int[union.Length + 1];
+                Array.Copy(union, temp, union.Length);
+                temp[union.Length] = arr2[i];
+                union = temp;
+            }
+        }
+
+
+        Console.Write("Intersection: ");
+        for (int i = 0; i < intersection.Length; i++)
+        {
+            Console.Write(intersection[i] + (i == intersection.Length - 1 ? "" : ", "));
+        }
+        Console.WriteLine();
+
+        Console.Write("Union: ");
+        for (int i = 0; i < union.Length; i++)
+        {
+            Console.Write(union[i] + (i == union.Length - 1 ? "" : ", "));
+        }
+        Console.WriteLine();
+    }
+
+
+3.  Implement a sparse matrix multiplication algorithm using a 2D array in C#.
+
+    public static int[,] MultiplySparseMatrices(int[,] matrix1, int[,] matrix2)
+    {
+        int rows1 = matrix1.GetLength(0);
+        int cols1 = matrix1.GetLength(1);
+        int rows2 = matrix2.GetLength(0);
+        int cols2 = matrix2.GetLength(1);
+
+        if (cols1 != rows2)
+        {
+            throw new ArgumentException("Matrices cannot be multiplied.");
+        }
+
+        int[,] result = new int[rows1, cols2];
+
+        for (int i = 0; i < rows1; i++)
+        {
+            for (int j = 0; j < cols2; j++)
+            {
+                for (int k = 0; k < cols1; k++)
+                {
+                    result[i, j] += matrix1[i, k] * matrix2[k, j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static void PrintMatrix(int[,] matrix)
+    {
+        int rows = matrix.GetLength(0);
+        int cols = matrix.GetLength(1);
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                Console.Write(matrix[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+
+
+
+
+
+4.    Write a method to find the first missing positive integer in an unsorted array (without sorting). 
+
+    public static int FindFirstMissingPositive(int[] nums)
+    {
+        int n = nums.Length;
+
+        for (int i = 0; i < n; i++)
+        {
+            if (nums[i] <= 0)
+            {
+                nums[i] = n + 1; // Mark as out of range
+            }
+        }
+
+      
+        for (int i = 0; i < n; i++)
+        {
+            int num = Math.Abs(nums[i]); 
+            if (num <= n)
+            {
+                nums[num - 1] = -Math.Abs(nums[num - 1]);
+            }
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            if (nums[i] > 0)
+            {
+                return i + 1;
+            }
+        }
+
+        return n + 1; // All numbers from 1 to n were present
+    }
+
+
+
+5.Design a method to rotate a 2D matrix (NxN) 90 degrees clockwise in place without using extra space.
+
+
+  public static void RotateMatrix(int[,] matrix)
+    {
+        int n = matrix.GetLength(0); 
+
+        for (int layer = 0; layer < n / 2; layer++)
+        {
+            int first = layer;
+            int last = n - 1 - layer;
+
+           
+            for (int i = first; i < last; i++)
+            {
+                int top = matrix[first, i]; 
+
+                // Left -> Top
+                matrix[first, i] = matrix[last - i + first, first];
+
+                // Bottom -> Left
+                matrix[last - i + first, first] = matrix[last, last - i + first];
+
+                // Right -> Bottom
+                matrix[last, last - i + first] = matrix[i, last];
+
+                // Top -> Right
+                matrix[i, last] = top;
+            }
+        }
+    }
+
+    public static void PrintMatrix(int[,] matrix)
+    {
+        int n = matrix.GetLength(0);
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                Console.Write(matrix[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
+    }
