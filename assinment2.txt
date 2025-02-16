@@ -1,0 +1,84 @@
+public class Solutions
+{
+    // 1. Sum of Array Elements
+    public static int ArraySum(int[] arr)
+    {
+        int sum = 0;
+        foreach (int num in arr)
+            sum += num;
+        return sum;
+    }
+
+    // 2. Find the Missing Number
+    public static int FindMissNumber(int[] arr, int n)
+    {
+        int total = n * (n + 1) / 2;
+        int sum = 0;
+        foreach (int num in arr)
+            sum += num;
+        return total - sum;
+    }
+
+    // 3. Reverse an Array in Place
+    public static void ReverseArray(int[] arr)
+    {
+        int left = 0, right = arr.Length - 1;
+        while (left < right)
+        {
+            int temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+            left++;
+            right--;
+        }
+    }
+
+    // 4. Find First Non-Repeating Character in a String
+    public static char FirstUniqueChar(string str)
+    {
+        Dictionary<char, int> counts = new Dictionary<char, int>();
+        foreach (char c in str)
+        {
+            if (!counts.ContainsKey(c)) counts[c] = 0;
+            counts[c]++;
+        }
+        foreach (char c in str)
+        {
+            if (counts[c] == 1) return c;
+        }
+        return '\0';
+    }
+
+    // 5. Find the Majority Element (Boyer-Moore)
+    public static int MajorityElement(int[] arr)
+    {
+        int count = 0, candidate = 0;
+        foreach (int num in arr)
+        {
+            if (count == 0) candidate = num;
+            count += (num == candidate) ? 1 : -1;
+        }
+        return candidate;
+    }
+
+    // 6. Rotate an Array by K Positions
+    public static void RotateArray(int[] arr, int k)
+    {
+        int n = arr.Length;
+        k %= n;
+        Reverse(arr, 0, n - 1);
+        Reverse(arr, 0, k - 1);
+        Reverse(arr, k, n - 1);
+    }
+    private static void Reverse(int[] arr, int start, int end)
+    {
+        while (start < end)
+        {
+            int temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+            start++;
+            end--;
+        }
+    }
+}
